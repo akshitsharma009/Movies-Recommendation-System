@@ -237,4 +237,11 @@ def main():
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
+
     main()
+    st.markdown("---")
+st.markdown(
+    "👨‍💻 **Created by Akshit Sharma** | "
+    "[GitHub](https://github.com/akshitsharma009) | "
+    "[LinkedIn](https://www.linkedin.com/in/akshit-sharma-7427362a0)"
+)
