@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
 import difflib
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -50,34 +49,40 @@ st.markdown("""
 # --------------------------------------------------
 # Load and preprocess data
 # --------------------------------------------------
-@st.cache_data
+# cache_resource shares a single copy of the (data, matrix) across reruns and
+# sessions instead of deep-copying the similarity matrix on every interaction
+# (which @st.cache_data would do). A load failure is NOT cached, so the app can
+# recover on a later rerun.
+@st.cache_resource
 def load_and_preprocess_data():
-    try:
-        movies_data = pd.read_csv("movies.csv")
+    # Load only the columns actually used — this drops the large unused columns
+    # (notably the multi-KB `crew` JSON) and keeps the DataFrame small.
+    movies_data = pd.read_csv(
+        "movies.csv",
+        usecols=['genres', 'keywords', 'cast', 'director', 'overview', 'title'],
+    )
 
-        selected_features = ['genres', 'keywords', 'cast', 'director', 'overview']
+    selected_features = ['genres', 'keywords', 'cast', 'director', 'overview']
 
-        for feature in selected_features:
-            movies_data[feature] = movies_data[feature].fillna('')
+    for feature in selected_features:
+        movies_data[feature] = movies_data[feature].fillna('')
 
-        combined_features = (
-            movies_data['genres'] + ' ' +
-            movies_data['keywords'] + ' ' +
-            movies_data['cast'] + ' ' +
-            movies_data['director'] + ' ' +
-            movies_data['overview']
-        )
+    combined_features = (
+        movies_data['genres'] + ' ' +
+        movies_data['keywords'] + ' ' +
+        movies_data['cast'] + ' ' +
+        movies_data['director'] + ' ' +
+        movies_data['overview']
+    )
 
-        vectorizer = TfidfVectorizer()
-        feature_vectors = vectorizer.fit_transform(combined_features)
+    vectorizer = TfidfVectorizer()
+    feature_vectors = vectorizer.fit_transform(combined_features)
 
-        similarity = cosine_similarity(feature_vectors)
+    # float32 halves the dense N x N matrix (~176 MB -> ~88 MB) with no
+    # practical impact on the ranking.
+    similarity = cosine_similarity(feature_vectors).astype('float32')
 
-        return movies_data, similarity
-
-    except Exception as e:
-        st.error(f"Error loading data: {e}")
-        return None, None
+    return movies_data, similarity
 
 # --------------------------------------------------
 # Recommendation logic
@@ -90,7 +95,8 @@ def get_recommendations(movie_name, movies_data, similarity, num_recommendations
         return None, None
 
     close_match = find_close_match[0]
-    index_of_the_movie = movies_data[movies_data['title'] == close_match].index[0]
+    # Positional index into the title list, so it aligns with similarity[...] and iloc[...]
+    index_of_the_movie = list_of_all_titles.index(close_match)
 
     similarity_score = list(enumerate(similarity[index_of_the_movie]))
     sorted_similar_movies = sorted(similarity_score, key=lambda x: x[1], reverse=True)
@@ -116,11 +122,12 @@ def main():
     st.markdown("### Discover movies similar to your favorites!")
     st.markdown("---")
 
-    with st.spinner("Loading movie database..."):
-        movies_data, similarity = load_and_preprocess_data()
-
-    if movies_data is None:
-        return
+    try:
+        with st.spinner("Loading movie database..."):
+            movies_data, similarity = load_and_preprocess_data()
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        st.stop()
 
     # Sidebar
     with st.sidebar:

@@ -1,138 +1,94 @@
-## 👤 Author
+# 🎬 Movie Recommendation System
 
-**Akshit Sharma**  
-B.Tech Engineering Student  
-Machine Learning & Data Science Enthusiast  
+An end-to-end **content-based movie recommendation system** that suggests movies similar to a
+user's favorite choice using natural language processing (TF-IDF) and cosine similarity. The app is
+deployed as an interactive web app with Streamlit.
 
-- GitHub: https://github.com/akshitsharma009
-- LinkedIn: https://www.linkedin.com/in/<your-linkedin-username>
+🔗 **Live app:** https://movies-recommendation-system-fgg2ekv383qu3xhmrc5gva.streamlit.app/
 
-🎬 Movie Recommendation System
+## 📌 Overview
 
-An end-to-end content-based movie recommendation system that suggests movies similar to a user’s favorite choice using natural language processing and cosine similarity. The application is deployed as an interactive web app using Streamlit.
+The system recommends movies based on similarity in:
 
-🔗 Live App:
-https://movies-recommendation-system-fgg2ekv383qu3xhmrc5gva.streamlit.app/
+- Genres
+- Keywords
+- Cast
+- Director
+- Overview
 
-📌 Project Overview
+It uses **TF-IDF vectorization** to convert textual metadata into numerical vectors and **cosine
+similarity** to measure how close two movies are.
 
-This project recommends movies based on similarity in:
+## ⚙️ Tech Stack
 
-genres
+- **Language:** Python
+- **Libraries:** pandas, NumPy, scikit-learn, Streamlit
+- **ML:** TF-IDF vectorization, cosine similarity
+- **Deployment:** Streamlit Community Cloud
+- **Version control:** Git & GitHub
 
-keywords
+## 🧠 How It Works
 
-cast
+1. Movie metadata is cleaned and combined into a single text feature.
+2. TF-IDF converts the text into numerical feature vectors.
+3. Cosine similarity measures similarity between movies.
+4. The most similar movies are ranked and returned.
+5. Results are displayed in an interactive Streamlit UI.
 
-director
+## 🚀 Features
 
-movie overview
+- Content-based movie recommendation
+- Fuzzy matching for movie names (typo-tolerant search)
+- Adjustable number of recommendations
+- Clean, modern Streamlit UI
 
-It uses TF-IDF vectorization to convert textual metadata into numerical vectors and computes similarity using cosine similarity.
+## 📂 Project Structure
 
-The system is designed to be fast, intuitive, and production-ready.
-
-⚙️ Tech Stack
-
-Programming Language: Python
-
-Libraries:
-
-Pandas
-
-NumPy
-
-Scikit-learn
-
-Streamlit
-
-Machine Learning:
-
-TF-IDF Vectorization
-
-Cosine Similarity
-
-Deployment:
-
-Streamlit Cloud
-
-Version Control:
-
-Git & GitHub
-
-🧠 How It Works
-
-Movie metadata is cleaned and combined into a single text feature.
-
-TF-IDF converts text into numerical feature vectors.
-
-Cosine similarity measures similarity between movies.
-
-The system finds and ranks the most similar movies.
-
-Results are displayed via an interactive Streamlit UI.
-
-🚀 Features
-
-Content-based movie recommendation
-
-Smart fuzzy matching for movie names
-
-Adjustable number of recommendations
-
-Clean, modern Streamlit UI
-
-CSV download for recommendations
-
-Fully deployed and accessible online
-
-📂 Project Structure
+```
 movies-recommendation-system/
 │
-├── app.py                 # Streamlit application
-├── movies.csv             # Dataset
-├── requirements.txt       # Dependencies
-└── README.md              # Project documentation
+├── app.py             # Streamlit application
+├── movies.csv         # Dataset (TMDB 5000)
+├── requirements.txt   # Python dependencies
+├── runtime.txt        # Python version for Streamlit Cloud
+├── notebook.ipynb     # Exploratory notebook
+└── README.md          # Project documentation
+```
 
-▶️ How to Run Locally
+## ▶️ Run Locally
 
 Clone the repository:
 
+```bash
 git clone https://github.com/akshitsharma009/movies-recommendation-system.git
-
-
-Navigate to the project folder:
-
 cd movies-recommendation-system
-
+```
 
 Install dependencies:
 
+```bash
 pip install -r requirements.txt
-
+```
 
 Run the app:
 
+```bash
 streamlit run app.py
+```
 
-📈 Example Use Case
+## 📈 Example
 
-User selects Inception
+Select **Inception** → the system analyzes metadata similarity and recommends movies such as
+*Interstellar*, *The Dark Knight*, and other Christopher Nolan / sci-fi titles.
 
-System analyzes metadata similarities
+## 👤 Author
 
-Recommends movies like Interstellar, The Dark Knight, etc.
+**Akshit Sharma** — B.Tech Engineering Student · Machine Learning & Data Science Enthusiast
 
-👤 Author
+- GitHub: https://github.com/akshitsharma009
+- LinkedIn: https://www.linkedin.com/in/akshit-sharma-7427362a0
 
-Akshit Sharma
-B.Tech Engineering Student
-Machine Learning & Data Science Enthusiast
+## 🏁 Conclusion
 
-GitHub: https://github.com/akshitsharma009
-
-LinkedIn: https://www.linkedin.com/in/akshit-sharma-7427362a0
-
-🏁 Conclusion
-
-This project demonstrates practical application of NLP techniques and machine learning similarity models in building a real-world recommendation system, from data processing to live deployment.
+This project demonstrates a practical application of NLP and similarity-based machine learning in a
+real-world recommendation system — from data processing to live deployment.
